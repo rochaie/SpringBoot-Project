@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>个人信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}"  media="all">
+    <link rel="stylesheet" th:href="@{/layui/css/headImg.css}">
+    <link rel="icon" type="image/x-icon" th:href="@{/layui/Soccer Ball.ico}">
+
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>个人信息</legend>
+</fieldset>
+
+<div style="position: absolute;left: 50%;top: 30%">
+    <button id="selectImg" class="layui-btn" style="position: absolute;left: -13%;">选择头像</button>
+    <input id="headImg" style="visibility: hidden" type="file" onchange="fileChange(event)" enctype="multipart/form-data"/>
+    <img name="canvas" th:src="${imgName}" onerror="this.src='/layui/background.jpg;this.onerror=null'" id="canvas" class="headImg" width="100" height="100">
+</div>
+
+<form class="layui-form" action="" id="form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">邮箱地址</label>
+        <div class="layui-input-block">
+            <input name="email" th:value="${email}"  class="layui-input" readonly="true">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input name="user_name" th:value="${userName}"  class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">qq</label>
+            <div class="layui-input-inline">
+                <input th:value="${qq}" type="tel" name="qq" lay-verify="title" autocomplete="off" class="layui-input" placeholder="未填写">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">年龄</label>
+        <div class="layui-input-inline" lay-filter="age">
+            <select name="age" lay-filter="aihao">
+                <option value=""></option>
+                <option value="1-18" th:selected="${age=='1-18'}">1-18</option>
+                <option value="19-30" th:selected="${age=='19-30'}">19-30</option>
+                <option value="31-40" th:selected="${age=='31-40'}">31-40</option>
+                <option value="41-50" th:selected="${age=='41-50'}">41-50</option>
+                <option value="51-60" th:selected="${age=='51-60'}">51-60</option>
+                <option value="61-70" th:selected="${age=='61-70'}">61-70</option>
+                <option value="71-80" th:selected="${age=='71-80'}">71-80</option>
+                <option value="81-90" th:selected="${age=='81-90'}">81-90</option>
+                <option value="91-100" th:selected="${age=='91-100'}">91-100</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">地区</label>
+            <div class="layui-input-inline">
+                <input th:value="${area}" type="tel" name="area" lay-verify="title" autocomplete="off" class="layui-input" placeholder="未填写">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">性别</label>
+        <div class="layui-input-block">
+            <input type="radio" id="radio1" name="sex" value="男" title="男">
+            <input type="radio" id="radio2" name="sex" value="女" title="女">
+        </div>
+    </div>
+
+    <div class="layui-form-item" pane="">
+        <label class="layui-form-label">爱好</label>
+        <div class="layui-input-block">
+            <input type="checkbox" value="文学" name="like" title="文学">
+            <input type="checkbox" value="娱乐" name="like" title="娱乐">
+            <input type="checkbox" value="学习" name="like" title="学习">
+            <input type="checkbox" value="运动" name="like" title="运动">
+            <input type="checkbox" value="音乐" name="like" title="音乐">
+            <input type="checkbox" value="冒险" name="like" title="冒险">
+            <input type="checkbox" value="其他" name="like" title="其他">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">喜欢足球否</label>
+        <div class="layui-input-block">
+            <input id="football" type="checkbox" checked="" name="isFootballFans" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">个人简介</label>
+        <div class="layui-input-block">
+            <textarea th:text="${introduce}" name="introduce" placeholder="尽情发挥你的风格!" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">修改信息</button>
+            <a href="/index" class="layui-btn">返回</a>
+        </div>
+    </div>
+</form>
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/ZUI/dist/lib/jquery/jquery.js}"></script>
+
+<script th:inline="javascript">
+    $('#selectImg').click(function () {
+        $('#headImg').click()
+    });
+    var imgData;
+    var fileChange= function showImg(event) {
+        var files = event.target.files, file;
+        if (files && files.length > 0) {
+            file = files[0];
+            if (file.size > 1024 * 1024 * 2) {
+                alert('图片不能超过2M');
+                return false;
+            }
+            var url = window.URL;
+            var imgUrl = url.createObjectURL(file)
+            $('#canvas').attr("src", imgUrl)
+            var reader = new FileReader();
+            reader.onload=function (ev) {
+                imgData=reader.result
+                imgData=encodeURIComponent(imgData)
+                $.ajax({
+                    url:"/imgSave",
+                    data:{'imgData':imgData},
+                    type:'post',
+                    success:function (data) {
+
+                    },
+                    error:function (xhr) {
+                           alert(xhr)
+                    }
+                })
+            }
+            reader.readAsDataURL(event.target.files[0])
+            }
+        }
+
+    var sex=[[${sex}]];
+    var hobies=[[${hobies}]];
+    var isFootballFans=[[${isFootballFans}]];
+    if (sex=='男'){
+        $('#radio1').attr("checked","checked")
+    }else if (sex=='女') {
+        $('#radio2').attr("checked","checked")
+    }
+    if (isFootballFans=='true'){
+        $('#football').attr("checked","checked")
+    } else if (isFootballFans=='false') {
+        $('#football').removeAttr("checked")
+    }
+
+    if (hobies!=null) {
+        var hoby = hobies.split(",")
+        var like = $('[name="like"]')
+        var j = 0
+        for (var i = 0; i < like.length && j < hoby.length; i++) {
+            if (hoby[j] == like[i].value) {
+                like[i].checked = true
+                j++
+            }
+        }
+    }
+
+
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+        form.render('select','age')
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            layer.msg('是球友吗？'+ (this.checked ? '球友!' : '..好吧不是'), {
+                offset: '6px'
+            });
+            layer.tips('温馨提示：请注意点击"是"按钮我们是球友!', data.othis)
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            if ( $('[name="like"]:checked').length==0){
+                data.field.like=""
+            }else {
+                var arr = new Array()
+                $("input:checkbox[name='like']:checked").each(function (i) {
+                    arr[i] = $(this).val()
+                });
+                data.field.like = arr.join(",")
+            }
+            if ($('[name="sex"]:checked').length==0){
+                data.field.sex=""
+            }
+            if($('[name="isFootballFans"]:checked').length==0){
+                data.field.isFootballFans="false"
+            }else {
+                data.field.isFootballFans="true"
+            }
+
+            $.ajax({
+                url:"/changeInformation",
+                type:"post",
+                data:data.field,
+                success:function (msg) {
+                    layer.msg(msg);
+                },
+                error:function (xhr) {
+                    layer.msg(xhr)
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

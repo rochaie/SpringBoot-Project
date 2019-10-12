@@ -1,0 +1,66 @@
+.talkLi{
+    margin: 15px;
+    list-style: none;
+    word-break: break-all;
+    border-bottom-width: thin;
+    border-bottom-color: #009f95;
+    border-bottom-style: solid;
+    border-top-width: thin;
+    border-top-color: #009f95;
+    border-top-style: solid;
+    border-left-width: medium;
+    border-left-color: #009f95;
+    border-left-style: solid;
+    border-right-width: medium;
+    border-right-color: #009f95;
+    border-right-style: solid;
+    box-shadow: gainsboro 3px 2px 2px 2px;
+}
+.user{
+    font-weight: bold;
+    padding: 5px;
+    font-family: 方正舒体;
+    overflow-x: hidden;
+    font-size: large;
+    height: 20px;
+    background-color: #01AAED;
+    border-bottom-width: thin;
+    border-bottom-color: #009f95;
+    border-bottom-style: solid;
+    border-top-width: thin;
+    border-top-color: #009f95;
+    border-top-style: solid;
+}
+.talkContent{
+    height: fit-content;
+    padding: 10px;
+}
+.time{
+    position: relative;
+    top: -18px;
+    left: 170px;
+    font-family: 楷体;
+    font-size: medium;
+}
+.loginA:hover{
+    color: #01AAED;
+}
+.talkLi:hover{
+    box-shadow: #a8e1a3 3px 3px 2px 2px;
+}
+.contentUl::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    scrollbar-arrow-color: #03b8cf;
+}
+.contentUl::-webkit-scrollbar-thumb{
+    border-radius: 20px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+    scrollbar-arrow-color:red;
+}
+.contentUl::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>注册</title>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" th:href="@{/layui/Soccer Ball.ico}">
+</head>
+<form method="post" id="submitForm" onsubmit="return submitIt()" action="/registerJudge">
+<div style="position: absolute;width:40%;height: 70%;left: 30%;top: 15%;
+    border-bottom-width: thin;
+    border-bottom-color: #93D1FF;
+    border-bottom-style: solid;
+    border-top-width: thin;
+    border-top-color: #93D1FF;
+    border-top-style: solid;
+    border-left-width: thin;
+    border-left-color: #93D1FF;
+    border-left-style: solid;
+    border-right-width: thin;
+    border-right-color: #93D1FF;
+    border-right-style: solid;
+    box-shadow: gainsboro 5px 2px 2px 2px;">
+    <h1 style="position: absolute;top: 5%;left: 40%;font-size: 400%;color: #039be5">Life</h1>
+    <div class="input-control has-icon-left" style="position: absolute;top: 25%;left: 20%;width: 40%">
+        <label class="input-control-icon-left"><i class="icon-user"></i></label>
+        <input name="userName" id="userName" type="text" class="form-control" placeholder="用户名" maxlength="16" oninput="OnInput2()">
+        <div id="usernameIcon" style="position: absolute;top: 10%;left: 110%;
+       font-size: medium;font-family: 'Arial Narrow';white-space: nowrap"></div>
+    </div>
+
+    <div class="input-control has-icon-left" style="position: absolute;top: 35%;left: 20%;width: 40%">
+        <label class="input-control-icon-left"><i class="icon-key"></i></label>
+        <input name="passwordRegister" type="password" class="form-control" placeholder="密码" id="Password" oninput="OnInput()" maxlength="16">
+        <div id="passwordSafe" style="position: absolute;top: 10%;left: 110%;
+       font-size: medium;font-family: 'Arial Narrow';white-space: nowrap"></div>
+    </div>
+
+    <div class="input-control has-icon-left" style="position: absolute;top: 45%;left: 20%;width: 40%">
+        <label class="input-control-icon-left"><i class="icon-key"></i></label>
+        <input type="password" class="form-control" placeholder="确认密码" oninput="OnInput1()" id="confirmPassword" maxlength="16">
+        <label class="input-control-icon-right" style="position: absolute;
+        top: 5%;left: 108%"><i id="confirmIconNo" class="icon icon-times" style="color: #dd1144;visibility: hidden"></i>
+            <i id="confirmIconYes" class="icon icon-check" style="position: absolute;left: 18%;top: 25%;color: #79d57f;
+          visibility: hidden">
+            </i>
+        </label>
+    </div>
+
+    <div class="input-control has-icon-left" style="position: absolute;top:55%;left: 20%;width: 40%">
+        <input name="email" id="email" type="email" class="form-control" placeholder="邮箱" oninput="checkEmail()">
+        <div id="emailIcon" style="position: absolute;top: 10%;left: 110%;
+       font-size: medium;font-family: 'Arial Narrow';white-space: nowrap"></div>
+        <label class="input-control-icon-left"><i class="icon-envelope"></i></label>
+        <i id="emailConfirmIcon" class="icon icon-check" style="position: absolute;left: 111%;top: 30%;color: #79d57f;
+          visibility: hidden"></i>
+        <input id="emailSubmit" onclick="settime(this)" class="btn btn-primary" style="position: absolute;left: 110%;top: 155%;" value="获取激活码" readonly="true">
+    </div>
+
+
+    <div class="input-control has-icon-left" style="position: absolute;top:65%;left: 20%;width: 40%">
+        <input oninput="inputCheckCode()" id="checkCode" type="text" class="form-control" placeholder="请输入激活码">
+        <label class="input-control-icon-left"><i class="icon icon-star"></i></label>
+    </div>
+
+    <button onclick="checkAll()" id="submit" class="btn btn-primary" style="position: absolute;top: 85%;left: 35%;width: 30%" >注册</button>
+</div>
+</form>
+
+
+<link rel="stylesheet" th:href="@{/ZUI/dist/css/zui.min.css}">
+<script th:src="@{/ZUI/dist/js/zui.min.js}"></script>
+<script th:src="@{/ZUI/dist/lib/jquery/jquery.js}"></script>
+<script th:inline="javascript" type="text/javascript">
+    var usernameIsok=false;
+    var passwordIsok=false;
+    var confirmIsok=false;
+    var emailIsok=false;
+    var checkCodeIsok=false;
+    var userName=document.getElementById('userName');
+    var usernameIcon=document.getElementById('usernameIcon');
+    var password=document.getElementById('Password');
+    var passwordSafe=document.getElementById('passwordSafe');
+    var confirmIconNo=document.getElementById('confirmIconNo');
+    var confirmIconYes=document.getElementById('confirmIconYes');
+    var confirmPassword=document.getElementById('confirmPassword');
+    var email=document.getElementById('email');
+    var emailIcon=document.getElementById('emailIcon');
+    var submit=document.getElementById('submit');
+    var emailConfirmIcon=document.getElementById('emailConfirmIcon');
+    var submitForm=document.getElementById('submitForm');
+    var checkCode=document.getElementById('checkCode');
+    var hasUserName=[[${hasUserName}]];
+    var hasEmail=[[${hasEmail}]];
+    var ActivationCode;
+    var registerSuccess=false;
+    var emailSubmit=document.getElementById('emailSubmit');
+
+    if (hasUserName!=null){
+        alert(hasUserName)
+    }
+    if (hasEmail!=null){
+        alert(hasEmail)
+    }
+
+    function OnInput() {
+        if (password.value.length==0){
+            passwordSafe.innerHTML='';
+            passwordIsok=false;
+        }
+        else if (password.value.length<6&&password.value.length>0){
+            passwordSafe.innerHTML='密码长度大于等于6位!';
+            passwordSafe.style.color='#e53d1c';
+            passwordIsok=false;
+        }
+        else if (password.value.length>=6&&check(password.value)==3) {
+            passwordSafe.innerHTML='低';
+            passwordSafe.style.color='#e53d1c';
+            passwordIsok=true;
+        }
+        else if (password.value.length>=6&&password.value.length<10&&check(password.value)==2){
+            passwordSafe.innerHTML='中';
+            passwordSafe.style.color='#FFB800';
+            passwordIsok=true;
+        }
+        else if (password.value.length>=10&&check(password.value)==1) {
+            passwordSafe.innerHTML='高';
+            passwordSafe.style.color='#4caf50';
+            passwordIsok=true;
+        }
+
+        if (confirmPassword.value==password.value&&password.value.length!=0){
+            confirmIconYes.style.visibility='visible';
+            confirmIconNo.style.visibility='hidden';
+        }
+        else if (confirmPassword.value!=password.value){
+            confirmIconNo.style.visibility='visible';
+            confirmIconYes.style.visibility='hidden';
+        }
+        else if (password.value.length==0||confirmPassword.value.length==0){
+            confirmIconNo.style.visibility='hidden';
+            confirmIconYes.style.visibility='hidden';
+        }
+    }
+
+    password.addEventListener('mousedown',onMouseDown)
+    document.addEventListener('click',function (event) {
+        if (password.value.length==0&&event.target!=password&&event.target!=submit){
+            passwordSafe.innerHTML='';
+        }
+    });
+    function onMouseDown(event) {
+        if (password.value.length==0){
+            passwordSafe.innerHTML='请输入密码!';
+            passwordSafe.style.color='#e53d1c';
+        }
+    }
+
+    function OnInput1() {
+        if (confirmPassword.value==password.value&&password.value.length!=0){
+            confirmIconYes.style.visibility='visible';
+            confirmIconNo.style.visibility='hidden';
+            confirmIsok=true;
+        }
+        else if (confirmPassword.value!=password.value){
+            confirmIconNo.style.visibility='visible';
+            confirmIconYes.style.visibility='hidden';
+            confirmIsok=false;
+        }
+        else if (password.value.length==0||confirmPassword.value.length==0){
+            confirmIconNo.style.visibility='hidden';
+            confirmIconYes.style.visibility='hidden';
+        }
+    }
+
+    function OnInput2() {
+        if (userName.value.length!=0){
+            usernameIcon.innerHTML='';
+            usernameIsok=true;
+        }
+        else {
+            usernameIsok=false;
+        }
+    }
+
+    function checkuserName() {
+        if (userName.value.length==0){
+            usernameIcon.innerHTML='请输入用户名!';
+            usernameIcon.style.color='#e53d1c';
+        }
+        else {
+            usernameIcon.innerHTML='';
+        }
+    }
+
+    function checkPasswordEmpty() {
+        if (password.value.length==0){
+            passwordSafe.innerHTML='请输入密码!';
+            passwordSafe.style.color='#e53d1c';
+        }
+    }
+
+    function checkConfirm() {
+        if (confirmPassword.value!=password.value||confirmPassword.value.length==0) {
+            confirmIconNo.style.visibility = 'visible';
+            confirmIconYes.style.visibility = 'hidden';
+            confirmIsok = false;
+        }else{
+            confirmIsok=true;
+        }
+
+    }
+
+    function check(str) {
+        var p=/[a-z]/;
+        var s=/[A-Z]/;
+        var n=/[0-9]/;
+        if (p.test(str)&&s.test(str)&&n.test(str)){
+            return 1;
+        }
+        else if ((p.test(str)&&n.test(str))||(s.test(str)&&n.test(str))){
+            return 2;
+        }
+        else {
+            return 3;
+        }
+    }
+
+    function checkEmail() {
+        var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+        if(email.value === ""){ //输入不能为空
+            emailIcon.innerHTML='请输入邮箱地址!';
+            emailIcon.style.color='#e53d1c';
+            emailConfirmIcon.style.visibility='hidden';
+            emailIsok=false;
+        }else if(!reg.test(email.value)){ //正则验证不通过，格式不对
+            emailIcon.innerHTML='格式不正确!';
+            emailIcon.style.color='#e53d1c';
+            emailConfirmIcon.style.visibility='hidden';
+            emailIsok=false;
+        }
+        else{
+            emailIcon.innerHTML='';
+            emailConfirmIcon.style.visibility='visible';
+            emailIsok=true;
+        }
+    }
+
+
+    function inputCheckCode() {
+        if (checkCode.value.length==0){
+            checkCodeIsok=false;
+        }else if (checkCode.value!=ActivationCode){
+            checkCodeIsok=false;
+        }
+        else {
+            checkCodeIsok=true;
+        }
+    }
+
+    function checkAll() {
+        if(usernameIsok==true&&passwordIsok==true&&confirmIsok==true&&emailIsok==true&&checkCodeIsok==true){
+            alert("注册成功!");
+            return true;
+        }else {
+            checkuserName();
+            checkPasswordEmpty();
+            checkConfirm();
+            checkEmail();
+            checkCodeIsOk();
+            return false;
+        }
+    }
+
+    function checkCodeIsOk() {
+        if (checkCode.value.length==0){
+            alert("请输入激活码!");
+        } else if (checkCode.value!=ActivationCode){
+            alert("请输入正确的激活码!");
+        }
+        else {
+            checkCodeIsok=true;
+        }
+    }
+
+    var countdown=60;
+    function settime(val) {
+        if (countdown == 0) {
+            val.removeAttribute("disabled");
+            val.value="免费获取激活码";
+            countdown = 60;
+        } else {
+            val.setAttribute("disabled", true);
+            val.value="重新发送(" + countdown + ")";
+            countdown--;
+        }
+        setTimeout(function() {
+            settime(val)
+        },1000)
+    }
+
+    function submitIt() {
+        if(usernameIsok==true&&passwordIsok==true&&confirmIsok==true&&emailIsok==true&&checkCodeIsok==true){
+            registerSuccess=true;
+            return true;
+        }else {
+            registerSuccess=false;
+            return false;
+        }
+    }
+
+    emailSubmit.onclick=function (ev) {
+        if (email.value.length==0){
+            emailIcon.innerHTML='请输入邮箱地址!';
+            emailIcon.style.color='#e53d1c';
+            emailConfirmIcon.style.visibility='hidden';
+            emailIsok=false;
+        }
+        else {
+            $.ajax({
+                type: "get",
+                url: "/sendMail",
+                data: {"email": email.value},
+                success: function (data) {
+                    alert("发送成功!请查收!");
+                    ActivationCode=data
+                },
+                error: function (xhr) {
+                    alert(xhr)
+                }
+            })
+        }
+    }
+
+
+</script>
+</body>
+</html>

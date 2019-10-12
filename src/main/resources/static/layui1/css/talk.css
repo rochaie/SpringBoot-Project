@@ -1,0 +1,46 @@
+.talkLi{
+    margin: 15px;
+    list-style: none;
+    word-break: break-all;
+    border-bottom-width: thin;
+    border-bottom-color: #009f95;
+    border-bottom-style: solid;
+    border-top-width: thin;
+    border-top-color: #009f95;
+    border-top-style: solid;
+    border-left-width: medium;
+    border-left-color: #009f95;
+    border-left-style: solid;
+    border-right-width: medium;
+    border-right-color: #009f95;
+    border-right-style: solid;
+    box-shadow: gainsboro 3px 2px 2px 2px;
+}
+.user{
+    font-weight: bold;
+    padding: 5px;
+    font-family: 方正舒体;
+    font-size: large;
+    height: 20px;
+    background-color: #01AAED;
+    border-bottom-width: thin;
+    border-bottom-color: #009f95;
+    border-bottom-style: solid;
+    border-top-width: thin;
+    border-top-color: #009f95;
+    border-top-style: solid;
+}
+.talkContent{
+    height: fit-content;
+    padding: 10px;
+}
+.time{
+    position: absolute;
+    top: 23px;
+    left: 30%;
+    font-family: 楷体;
+    font-size: medium;
+}
+.loginA:hover{
+    color: #01AAED;
+}

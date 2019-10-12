@@ -1,0 +1,11 @@
+.headImg{
+    position: absolute;
+    left: -70%;
+    top: -100%;
+    border:0;
+    display: inline-block;
+    border-top-right-radius: 100%;
+    border-top-left-radius: 100%;
+    border-bottom-left-radius: 100%;
+    border-bottom-right-radius: 100%;
+}

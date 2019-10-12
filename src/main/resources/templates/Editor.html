@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加文章</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/layui/Soccer Ball.ico}">
+    <style type="text/css">
+        .toolbar {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+        }
+        .text {
+            border: 1px solid #ccc;
+            height: 200px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div style="padding: 5px 0; color: #ccc"></div>
+
+<div id="texteditor">文字：
+</div>
+
+<form method="post" action="/add">
+    <textarea id="text1" name="content"  style="visibility: hidden;position: absolute;left: 0"></textarea>
+    <input type="submit" value="提交" name="submit">
+    标题:<input type="text" name="topic">
+    日期:<input type="text" id="time" name="time" readonly="true">
+</form>
+
+<script type="text/javascript" th:src="@{/wangEditor-3.1.1/release/wangEditor.min.js}"></script>
+<script type="text/javascript" th:src="@{/wangEditor-3.1.1/release/jQuery.js}"></script>
+<script type="text/javascript">
+    var E = window.wangEditor
+    var texteditor=new E('#texteditor');
+    texteditor.customConfig.uploadImgShowBase64=true
+    var $text1=$('#text1');
+    texteditor.customConfig.onchange=function(text){
+        $text1.val(text)
+    };
+    texteditor.create();
+    $text1.val(texteditor.txt.text());
+    var d=new Date();
+    var $time=$('#time');
+    $time.val(d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate())
+</script>
+</body>
+</html>
